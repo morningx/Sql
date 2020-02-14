@@ -69,12 +69,12 @@ alter table hospital drop id;
 
 # 导入表city数据
 load data local infile "C://Users//beimo//Desktop//xg//city.txt"
-into table city1
+into table city
 fields terminated by ',' ignore 1 lines;
 
 # 导入province数据
 load data local infile "C:/Users/beimo/Desktop/xg/province.txt"
-into table province1 
+into table province
 fields terminated by ',' ignore 1 lines;
 
 # 导入population数据
@@ -141,7 +141,7 @@ select 城市,确诊人数,死亡人数 from city where 确诊人数>200 and 死
 select 城市,sum(确诊人数) from city group by 城市 order by sum(确诊人数) desc;
 
 # 多表查询,多表左连接
-select province1.各省及直辖市,sum(确诊人数) 总确诊人数,sum(死亡人数) 总死亡人数,sum(治愈人数) 总治愈人数,hospital.三甲医院数量,popular.人口数量 from
+select province.各省及直辖市,sum(确诊人数) 总确诊人数,sum(死亡人数) 总死亡人数,sum(治愈人数) 总治愈人数,hospital.三甲医院数量,popular.人口数量 from
 province left join popular on province.各省及直辖市=popular.各省及直辖市
 left join hospital on province.各省及直辖市=hospital.各省及直辖市
 group by 各省及直辖市 order by 总确诊人数 desc;
