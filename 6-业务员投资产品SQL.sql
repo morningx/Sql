@@ -3,8 +3,8 @@ use sql;
 
 
 
-# investÍ¶×Ê£»£¨°Ñ×Ê½ğ£©Í¶Èë
-# Í¶×Ê±í£¬Í¶×ÊÊ±¼ä£¬ÓÃ»§ID£¬Í¶×Ê²úÆ·£¬Í¶×Ê½ğ¶î
+# investæŠ•èµ„ï¼›ï¼ˆæŠŠèµ„é‡‘ï¼‰æŠ•å…¥
+# æŠ•èµ„è¡¨ï¼ŒæŠ•èµ„æ—¶é—´ï¼Œç”¨æˆ·IDï¼ŒæŠ•èµ„äº§å“ï¼ŒæŠ•èµ„é‡‘é¢
 create table cmn_investment_request(
 Created_at datetime,
 User_id varchar(10),
@@ -14,8 +14,8 @@ invest_amount decimal(38,10)
 
 
 
-# ÒµÎñÔ±±í£¬ÓÃ»§ID£¬¿ªÊ¼Ê±¼ä£¬½áÊøÊ±¼ä£¬ÒµÎñÔ±ID
-# ÒµÎñÔ±ÓĞ¸ú½øÁªÏµ¶ÔÓ¦µÄÓÃ»§ID£¬²úÉúÁË¶ÔÓ¦µÄÍ¶×ÊĞĞÎª
+# ä¸šåŠ¡å‘˜è¡¨ï¼Œç”¨æˆ·IDï¼Œå¼€å§‹æ—¶é—´ï¼Œç»“æŸæ—¶é—´ï¼Œä¸šåŠ¡å‘˜ID
+# ä¸šåŠ¡å‘˜æœ‰è·Ÿè¿›è”ç³»å¯¹åº”çš„ç”¨æˆ·IDï¼Œäº§ç”Ÿäº†å¯¹åº”çš„æŠ•èµ„è¡Œä¸º
 create table dim_agent(
 User_id varchar(10),
 Start_date datetime,
@@ -47,21 +47,23 @@ insert into dim_agent values
 
 select * from cmn_investment_request;
 select * from dim_agent;
-desc cmn_investment_request; # Created_at User_id invest_item invest_amount
-desc dim_agent; # User_id Start_date End_date Agent_id
+desc cmn_investment_request; 
+# Created_at User_id invest_item invest_amount
+desc dim_agent; 
+# User_id Start_date End_date Agent_id
 
 
 
-# µ¥¸öÓÃ»§Ã¿±ÊÍ¶×Ê´óÓÚ50ÍòµÄÓÃ»§
+# å•ä¸ªç”¨æˆ·æ¯ç¬”æŠ•èµ„å¤§äº50ä¸‡çš„ç”¨æˆ·
 select 
 	Created_at,
 	User_id,
-	TRUNCATE(sum(invest_amount)/count(invest_amount),2) as ÓÃ»§Í¶×Ê¾ùÖµ
+	TRUNCATE(sum(invest_amount)/count(invest_amount),2) as ç”¨æˆ·æŠ•èµ„å‡å€¼
 from cmn_investment_request
 where year(Created_at)=2017
 group by User_id;
 # having sum(invest_amount)/count(invest_amount) > 500000
-# `Created_at`	`User_id`	ÓÃ»§Í¶×Ê¾ùÖµ
+# `Created_at`	`User_id`	ç”¨æˆ·æŠ•èµ„å‡å€¼
 # 2017-11-01 01:32:00	A123	416666.66
 # 2017-12-06 20:06:00	B456	966666.66
 
@@ -75,7 +77,7 @@ having min(invest_amount)>500000;
 
 
 
-# ¼ÆËã2017Äê½öÍ¶×Ê¹ıCFHºÍAX²úÆ·µÄÓÃ»§
+# è®¡ç®—2017å¹´ä»…æŠ•èµ„è¿‡CFHå’ŒAXäº§å“çš„ç”¨æˆ·
 
 select * from cmn_investment_request;
 desc cmn_investment_request; # Created_at User_id invest_item   invest_amount
@@ -90,25 +92,27 @@ and invest_item = 'AX' or invest_item = 'CFH';
 # B456
 
 select 
-User_id,group_concat(distinct invest_item order by invest_item desc) as Í¶×Ê²úÆ·
+User_id,group_concat(distinct invest_item order by invest_item desc) as æŠ•èµ„äº§å“
 from cmn_investment_request
 where year(Created_at)=2017
 group by User_id
-having Í¶×Ê²úÆ· = 'CFH,AX';
-# User_id	Í¶×Ê²úÆ·
+having æŠ•èµ„äº§å“ = 'CFH,AX';
+# User_id	æŠ•èµ„äº§å“
 # B456	CFH,AX
 
 
 
-# ¹éÊôÓÚ10002ÒµÎñÔ±µÄÍ¶×Ê½ğ¶î
+# å½’å±äº10002ä¸šåŠ¡å‘˜çš„æŠ•èµ„é‡‘é¢
 
 select * from cmn_investment_request;
 select * from dim_agent;
-desc cmn_investment_request; # Created_at User_id invest_item   invest_amount
-desc dim_agent; # User_id Start_date End_date Agent_id
+desc cmn_investment_request; 
+# Created_at User_id invest_item   invest_amount
+desc dim_agent; 
+# User_id Start_date End_date Agent_id
 
-# ¿¼ÂÇµ½ÒµÎñÔ±±ØĞëÔÚ¿ªÊ¼Ê±¼äºÍ½áÊøÊ±¼äÄÚ£¬ÓÃ»§´´½¨µÄ¹ºÂò¶©µ¥²ÅÓĞĞ§
-# ·ñÔò¾ÍÊÇ±ğÈËËø¶¨µÄÊÕÒæ
+# è€ƒè™‘åˆ°ä¸šåŠ¡å‘˜å¿…é¡»åœ¨å¼€å§‹æ—¶é—´å’Œç»“æŸæ—¶é—´å†…ï¼Œç”¨æˆ·åˆ›å»ºçš„è´­ä¹°è®¢å•æ‰æœ‰æ•ˆ
+# å¦åˆ™å°±æ˜¯åˆ«äººé”å®šçš„æ”¶ç›Š
 select d.Agent_id,sum(c.invest_amount)
 from cmn_investment_request as c
 left join dim_agent as d 
