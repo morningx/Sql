@@ -317,3 +317,14 @@ max(amount) over(partition by user_no order by order_id) max1,
 min(amount) over(partition by user_no order by order_id) min1,
 count(amount) over(partition by user_no order by order_id) count1
 from order_tab;
+/* order_id	user_no	amount	create_date	sum1	avg1	max1	min1	count1
+1	001	100	2019-01-01	100	100	100	100	1
+2	001	300	2019-01-02	400	200	300	100	2
+3	001	500	2019-01-02	900	300	500	100	3
+4	001	800	2019-01-03	1,700	425	800	100	4
+5	001	900	2019-01-04	2,600	520	900	100	5
+6	002	500	2019-01-03	500	500	500	500	1
+7	002	600	2019-01-04	1,100	550	600	500	2
+8	002	300	2019-01-10	1,400	466.6667	600	300	3
+9	002	800	2019-01-16	2,200	550	800	300	4
+10	002	800	2019-01-22	3,000	600	800	300	5 */
